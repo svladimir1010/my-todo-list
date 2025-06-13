@@ -1,12 +1,62 @@
-# React + Vite
+# 📝 My To-Do List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## ✨ Описание проекта
 
-Currently, two official plugins are available:
+Это простое и интуитивно понятное приложение To-Do List, разработанное для закрепления базовых концепций React и использования компонентов Material-UI. Оно позволяет пользователям добавлять, удалять и отмечать задачи как выполненные, а также сохраняет данные в локальном хранилище браузера, чтобы они не терялись при перезагрузке страницы.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Демо и Репозиторий
 
-## Expanding the ESLint configuration
+* **Рабочее демо:** [https://my-todo-list-i15p.vercel.app/](https://my-todo-list-i15p.vercel.app/) 
+* **Репозиторий на GitHub:** [https://github.com/svladimir1010/my-todo-list](https://github.com/svladimir1010/my-todo-list)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Используемые технологии
+
+* **React:** Библиотека JavaScript для создания пользовательских интерфейсов.
+* **Vite:** Быстрый и легковесный инструмент для сборки фронтенд-проектов.
+* **Material-UI (MUI):** Популярная библиотека React-компонентов, реализующая Material Design.
+* **`useState` (React Hooks):** Для управления состоянием приложения.
+* **`useEffect` (React Hooks):** Для работы с побочными эффектами, в данном случае — для сохранения и загрузки данных в `localStorage`.
+
+## 🌟 Возможности
+
+* Добавление новых задач.
+* Отметка задач как выполненных (с визуальным зачеркиванием).
+* Удаление задач из списка.
+* Автоматическое сохранение и загрузка задач из `localStorage` браузера.
+
+## 👨‍💻 Как запустить локально
+
+Чтобы запустить проект на вашем компьютере:
+
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone [https://github.com/svladimir1010/my-todo-list.git](https://github.com/svladimir1010/my-todo-list.git)
+    cd my-todo-list
+    ```
+
+2.  **Установите зависимости:**
+    ```bash
+    npm install
+    # или
+    yarn install
+    ```
+
+3.  **Запустите приложение в режиме разработки:**
+    ```bash
+    npm run dev
+    # или
+    yarn dev
+    ```
+    Приложение будет доступно по адресу `http://localhost:5173` (или другому порту, указанному в консоли).
+
+4.  **Сборка для продакшена:**
+    ```bash
+    npm run build
+    # или
+    yarn build
+    ```
+    Собранные файлы будут находиться в папке `dist`.
+
+## 📄 Лицензия
+
+Этот проект распространяется под лицензией MIT.
