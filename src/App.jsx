@@ -6,12 +6,12 @@ import TodoList from './components/TodoList.jsx'
 const App = () => {
   const [ todos, setTodos ] = useState(() => {
     const savedTodos = localStorage.getItem('todos')
-    return savedTodos ? JSON.parse(savedTodos) : [];
-  } )
+    return savedTodos ? JSON.parse(savedTodos) : []
+  })
 
   useEffect(() => {         // Сохраняем todos в localStorage
     localStorage.setItem('todos', JSON.stringify(todos))
-  }, [todos] )
+  }, [ todos ])
 
   const addTodo = (text) => {
     const newTodo = {
@@ -35,14 +35,14 @@ const App = () => {
   return (
       <Container maxWidth={ 'sm' } sx={ { mt: 4 } }>
         <Typography
-            variant="h4"
-            component="h1"
+            variant="h4" // Заголовок приложения
+            component="h1" // Используем h1 для SEO
             gutterBottom // Отступ снизу
             align="center"
         >
           My To-Do List
         </Typography>
-        <AddTodo onAddTodo={ addTodo }/>
+        <AddTodo onAddTodo={ addTodo } todos={todos}/>
         <TodoList
             todos={ todos }
             onDeleteTodo={ deleteTodo }
