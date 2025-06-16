@@ -28,11 +28,11 @@ const AddTodo = ({ onAddTodo, todos }) => {
       return
     }
 
-    if(todos.some(todo => todo.text === trimmed)) {
+    if(todos.some(todo => todo.text === trimmed)) { // Проверяем, есть ли уже такая задача
       alert('Такая задача уже есть')
       return
     }
-
+    console.log('trimmed: ', trimmed)
     onAddTodo(trimmed)  // Используем очищенный вариант
     setTodoText('')
   }

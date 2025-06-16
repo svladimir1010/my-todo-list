@@ -8,7 +8,7 @@ const TodoList = ({ todos, onDeleteTodo, onToggleTodo }) => {
       <List>
         <AnimatePresence>
           { todos.map(todo => (
-              <motion.li
+              <motion.div
                   key={ todo.id } // ОЧЕНЬ ВАЖНО: key должен быть на motion-компоненте
                   initial={ { opacity: 0, x: -100 } } // Начальное состояние (при добавлении)
                   animate={ { opacity: 1, x: 0 } }    // Конечное состояние (после добавления)
@@ -20,7 +20,7 @@ const TodoList = ({ todos, onDeleteTodo, onToggleTodo }) => {
                     onDeleteTodo={ onDeleteTodo }
                     onToggleTodo={ onToggleTodo } // Функция для переключения состояния todo
                 />
-              </motion.li>
+              </motion.div>
           )) }
         </AnimatePresence>
       </List>
