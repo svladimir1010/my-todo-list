@@ -6,7 +6,7 @@
 
 ## 🚀 Демо и Репозиторий
 
-* **Рабочее демо:** [https://my-todo-list-i15p.vercel.app/](https://my-todo-list-i15p.vercel.app/) 
+* **Рабочее демо:** [https://my-todo-list-steel.vercel.app](https://my-todo-list-i15p.vercel.app/) 
 * **Репозиторий на GitHub:** [https://github.com/svladimir1010/my-todo-list](https://github.com/svladimir1010/my-todo-list)
 
 ## 🛠️ Используемые технологии
