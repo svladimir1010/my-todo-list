@@ -3,7 +3,7 @@ import React from 'react'
 import TodoItem from './TodoItem'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const TodoList = ({ todos, onDeleteTodo, onToggleTodo }) => {
+const TodoList = ({ todos, onDeleteTodo, onToggleTodo, onEditTodo  }) => {
   return (
       <List>
         <AnimatePresence>
@@ -17,6 +17,7 @@ const TodoList = ({ todos, onDeleteTodo, onToggleTodo }) => {
               >
                 <TodoItem
                     todo={ todo }
+                    onEditTodo={ onEditTodo } // Функция для редактирования todo
                     onDeleteTodo={ onDeleteTodo }
                     onToggleTodo={ onToggleTodo } // Функция для переключения состояния todo
                 />
