@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import SaveIcon from '@mui/icons-material/Save'
 import CloseIcon from '@mui/icons-material/Close' // Импорт иконки отмены
 import React from 'react'
+import { toast } from 'react-toastify' // Импортируем toast
+import { validateTodoText } from '../utils/validation'
 
 
 const TodoItem = ({ todo, onDeleteTodo, onToggleTodo, onEditTodo }) => {
@@ -12,30 +14,29 @@ const TodoItem = ({ todo, onDeleteTodo, onToggleTodo, onEditTodo }) => {
 
   // Обработчик редактирования вызываемый при сохранении изменений
   const handleSaveEdit = () => {
+
     // Валидируем текст перед сохранением
-    const trimmedText = editedText.trim() // Удаляем пробелы в начале и конце строки
-    if(trimmedText === todo.text) { // Если не изменился выход из режима редактирования
-      setIsEditing(false)
-      return
-    }
-    if(trimmedText.length < 3) {
-      alert('Текст должен содержать хотя бы 3 символа') // Используем alert, как в оригинальном коде
-      return
-    }
-    if(trimmedText.length > 100) {
-      alert('Слишком длинная задача. Пожалуйста, сократите до 100 символов.') // Используем alert, как в оригинальном коде
+    const validationError = validateTodoText(editedText)
+    if(validationError) {
+      toast.warn(validationError)
       return
     }
 
-    onEditTodo(todo.id, trimmedText) //
+    // Дополнительная проверка: если текст не изменился после валидации, не сохраняем
+    if(editedText.trim() === todo.text) {
+      setIsEditing(false)
+      return
+    }
+
+    onEditTodo(todo.id, editedText.trim()) // Передаем обрезанный текст
     setIsEditing(false)
   }
 
   // Обработчик отмены редактирования
   const handleCancelEdit = () => {
-    setEditedText(todo.text); // Сбросить текст до исходного
-    setIsEditing(false); // Выйти из режима редактирования
-  };
+    setEditedText(todo.text) // Сбросить текст до исходного
+    setIsEditing(false) // Выйти из режима редактирования
+  }
 
   return (
       <ListItem
@@ -61,19 +62,19 @@ const TodoItem = ({ todo, onDeleteTodo, onToggleTodo, onEditTodo }) => {
             onChange={ () => onToggleTodo(todo.id) }
             checked={ todo.completed }
         />
-        {isEditing ? (
+        { isEditing ? (
             <TextField
                 variant="outlined"
                 value={ editedText }
                 onChange={ (e) => setEditedText(e.target.value) }
                 onKeyPress={ (e) => {
-                  if (e.key === 'Enter') {
+                  if(e.key === 'Enter') {
                     handleSaveEdit()
                   }
                 } }
                 fullWidth
                 size="small"
-                sx={{ mr: 1 }}
+                sx={ { mr: 1 } }
             />
         ) : (
             <Typography
@@ -91,34 +92,34 @@ const TodoItem = ({ todo, onDeleteTodo, onToggleTodo, onEditTodo }) => {
             >
               { todo.text }
             </Typography>
-        )}
+        ) }
 
-        {isEditing ? (
+        { isEditing ? (
             <>
               <IconButton
                   edge="end"
                   aria-label="save"
-                  onClick={handleSaveEdit}
+                  onClick={ handleSaveEdit }
               >
-                <SaveIcon />
+                <SaveIcon/>
               </IconButton>
               <IconButton
                   edge="end"
                   aria-label="cancel"
-                  onClick={handleCancelEdit}
+                  onClick={ handleCancelEdit }
               >
-                <CloseIcon />
+                <CloseIcon/>
               </IconButton>
             </>
         ) : (
             <IconButton
                 edge="end"
                 aria-label="edit"
-                onClick={() => setIsEditing(true)}
+                onClick={ () => setIsEditing(true) }
             >
-              <EditIcon />
+              <EditIcon/>
             </IconButton>
-        )}
+        ) }
 
         <IconButton
             edge="end" // Кнопка удаления выравнивается по правому краю

@@ -1,6 +1,8 @@
 import { Box, TextField, Button } from '@mui/material'
 import React, { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
+import { toast } from 'react-toastify'; // Импортируем toast
+import { validateTodoText } from '../utils/validation'
 
 
 const AddTodo = ({ onAddTodo, todos }) => {
@@ -11,25 +13,17 @@ const AddTodo = ({ onAddTodo, todos }) => {
     e.preventDefault()
 
     const trimmed = todoText.trim()  // Удаляем пробелы в начале и конце строки
-    const cleanText = todoText.replace(/\s/g, '')
+    const validationError = validateTodoText(todoText)
 
-    if(trimmed.length < 3) {
-      alert('Текст должен содержать хотя бы 3 символа')
-      return
-    }
-
-    if(!cleanText.length) {
-      alert('Поле не должно содержать только пробелы или табы')
-      return
-    }
-
-    if(trimmed.length > 100) {
-      alert('Слишком длинная задача. Пожалуйста, сократите до 100 символов.')
-      return
+    if (validationError) {
+      toast.warn(validationError); // Показываем сообщение об ошибке
+      setTodoText('') // Очищаем поле ввода при ошибке валидации
+      return;
     }
 
     if(todos.some(todo => todo.text === trimmed)) { // Проверяем, есть ли уже такая задача
-      alert('Такая задача уже есть')
+      toast.warn('Такая задача уже есть')
+      setTodoText(''); // Очищаем поле при дублировании задачи
       return
     }
     console.log('trimmed: ', trimmed)
