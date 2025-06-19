@@ -1,5 +1,5 @@
-import { Box, Container, IconButton, Typography } from '@mui/material'
-import React, { useEffect, useMemo, useState } from 'react'
+import { Box, Container, IconButton, Typography, Tabs, Tab } from '@mui/material'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import AddTodo from './components/AddTodo.jsx'
 import TodoList from './components/TodoList.jsx'
 import axios from 'axios'
@@ -7,8 +7,6 @@ import { ThemeProvider, CssBaseline } from '@mui/material' // Импортиру
 import { lightTheme, darkTheme } from './theme' // Импортируем созданные темы
 import Brightness4Icon from '@mui/icons-material/Brightness4' // Иконка для темной темы (луна)
 import Brightness7Icon from '@mui/icons-material/Brightness7' // Иконка для светлой темы (солнце)
-
-// Импорты для React Toastify
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css' // стили Toastify
 
@@ -24,6 +22,8 @@ const App = () => {
     const savedMode = localStorage.getItem('themeMode')
     return savedMode || 'light'
   })
+  // Состояние для текущего фильтра: 'all', 'active', 'completed'
+  const [ filter, setFilter ] = useState('all')
 
   // Создаем объект темы на основе текущего режима. useMemo предотвращает пересоздание объекта темы при каждом рендере.
   const theme = useMemo(() => ( mode === 'light' ? lightTheme : darkTheme ), [ mode ])
@@ -33,23 +33,40 @@ const App = () => {
     localStorage.setItem('themeMode', mode)
   }, [ mode ]) // Зависимость от mode: эффект будет выполняться при изменении mode
 
-  // Загружаем список todos при запуске
-  useEffect(() => {
-    axios.get(API_URL)
+
+  // Функция для загрузки задач с учетом фильтра
+  const fetchTodos = useCallback((currentFilter) => {
+    let apiUrl = API_URL
+    if(currentFilter === 'active') {
+      apiUrl = `${ API_URL }?completed=false`
+    } else if(currentFilter === 'completed') {
+      apiUrl = `${ API_URL }?completed=true`
+    }
+
+    axios.get(apiUrl)
          .then(res => setTodos(res.data))
-        // .catch(err => console.error('Ошибка при загрузке todos:', err))
          .catch(err => {
            console.error('Ошибка при загрузке todos:', err)
-           toast.error('Не удалось загрузить задачи. Попробуйте позже.') // Уведомление об ошибке
+           toast.error('Не удалось загрузить задачи. Попробуйте позже.')
          })
-  }, [])
+  }, [ API_URL ]) // Зависимость от API_URL
+
+  // Загружаем список todos при запуске и при изменении фильтра
+  useEffect(() => {
+    fetchTodos(filter)
+  }, [ filter, fetchTodos ]) // Зависимость от filter и fetchTodos
+
+  // Обработчик изменения вкладки фильтра
+  const handleFilterChange = (event, newValue) => {
+    setFilter(newValue)
+  }
 
   // Добавляем новый todo
   const addTodo = (text) => {
     axios.post(API_URL, { text }) // Отправляем новый todo на сервер
         // Добавляем новый todo в состояние
          .then(res => {
-           setTodos(prev => [ ...prev, res.data ])
+           fetchTodos(filter) // Перезагружаем задачи с учетом текущего фильтра
            toast.success('Задача успешно добавлена!') // Уведомление об успехе
          })
          .catch(err => {
@@ -66,7 +83,8 @@ const App = () => {
   const deleteTodo = (id) => {
     axios.delete(`${ API_URL }/${ id }`)
          .then(() => {
-           setTodos(prev => prev.filter(todo => todo.id !== id))
+           // После удаления, обновляем список с учетом текущего фильтра
+           fetchTodos(filter)
            toast.success('Задача успешно удалена!') // Уведомление об успехе
          })
          .catch(err => {
@@ -85,7 +103,8 @@ const App = () => {
 
     axios.patch(`${ API_URL }/${ id }`, { completed: !todo.completed })
          .then(res => {
-           setTodos(prev => prev.map(t => t.id === id ? res.data : t))
+           // После изменения статуса, обновляем список с учетом текущего фильтра
+           fetchTodos(filter)
            toast.info('Статус задачи обновлен!') // Информационное уведомление
          })
          .catch(err => {
@@ -101,7 +120,8 @@ const App = () => {
     // PUT запрос обновления текста todo
     axios.put(`${ API_URL }/${ id }`, { text: newText })
          .then(res => {
-           setTodos(prev => prev.map(t => t.id === id ? res.data : t))
+           // После редактирования, обновляем список с учетом текущего фильтра
+           fetchTodos(filter)
            toast.success('Задача успешно отредактирована!') // Уведомление об успехе
          })
          .catch(err => {
@@ -136,11 +156,26 @@ const App = () => {
               My To-Do List
             </Typography>
 
-
             {/* Кнопка переключения темы */ }
             <IconButton sx={ { ml: 'auto' } } onClick={ toggleThemeMode } color="inherit">
               { mode === 'dark' ? <Brightness7Icon/> : <Brightness4Icon/> }
             </IconButton>
+          </Box>
+
+          {/* Вкладки фильтрации */ }
+          <Box sx={ { borderBottom: 1, borderColor: 'divider', mb: 2 } }>
+            <Tabs
+                value={ filter }
+                onChange={ handleFilterChange }
+                aria-label="todo filters"
+                variant="fullWidth" // Вкладки занимают всю доступную ширину
+                indicatorColor="primary" // Цвет индикатора
+                textColor="inherit" // Цвет текста вкладок
+            >
+              <Tab label="Все" value="all"/>
+              <Tab label="Активные" value="active"/>
+              <Tab label="Выполненные" value="completed"/>
+            </Tabs>
           </Box>
 
           <AddTodo onAddTodo={ addTodo } todos={ todos }/>
