@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Typography, Tabs, Tab } from '@mui/material'
+import { Box, Container, IconButton, Typography, Tabs, Tab, Button } from '@mui/material'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import AddTodo from './components/AddTodo.jsx'
 import TodoList from './components/TodoList.jsx'
@@ -7,11 +7,16 @@ import { ThemeProvider, CssBaseline } from '@mui/material' // Импортиру
 import { lightTheme, darkTheme } from './theme' // Импортируем созданные темы
 import Brightness4Icon from '@mui/icons-material/Brightness4' // Иконка для темной темы (луна)
 import Brightness7Icon from '@mui/icons-material/Brightness7' // Иконка для светлой темы (солнце)
+import DiamondIcon from '@mui/icons-material/Diamond' // Иконка для Premium
+
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css' // стили Toastify
 
 
 const API_URL = import.meta.env.VITE_API_URL // адрес FastAPI
+
+// URL для запросов к бэкенду Stripe
+const STRIPE_API_URL = `${API_URL.replace('/todos', '')}/create-checkout-session`; // Получаем базовый URL и добавляем эндпоинт Stripe
 
 
 const App = () => {
@@ -42,7 +47,6 @@ const App = () => {
     } else if(currentFilter === 'completed') {
       apiUrl = `${ API_URL }?completed=true`
     }
-
     axios.get(apiUrl)
          .then(res => setTodos(res.data))
          .catch(err => {
@@ -139,6 +143,59 @@ const App = () => {
   }
 
 
+  // ФУНКЦИЯ: Обработчик для кнопки Premium
+  const handlePremiumClick = async () => {
+    try {
+      // Отправляем запрос на наш бэкенд для создания платежной сессии
+      const response = await axios.post(STRIPE_API_URL);
+      const { url } = response.data; // Получаем URL ответа от бэкенда
+
+      // Перенаправляем пользователя на страницу Stripe Checkout
+      window.location.href = url;
+    } catch (err) {
+      console.error('Ошибка при инициировании платежа Stripe:', err);
+      const errorMessage = err.response && err.response.data && err.response.data.detail
+          ? err.response.data.detail
+          : 'Не удалось перейти к оплате. Пожалуйста, попробуйте позже.';
+      toast.error(errorMessage);
+    }
+  };
+
+  // Получаем текущий путь для отображения Premium кнопки
+  const pathname = window.location.pathname;
+
+  if (pathname === '/success') {
+    return (
+        <Container maxWidth="sm" sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="h5" color="primary" gutterBottom>
+            ✅ Оплата успешно завершена!
+          </Typography>
+          <Typography variant="body1">
+            Спасибо за вашу поддержку! Теперь вы можете наслаждаться премиум-функциями.
+          </Typography>
+          <Button variant="contained" sx={{ mt: 3 }} onClick={() => window.location.href = '/'}>
+            Вернуться к задачам
+          </Button>
+        </Container>
+    );
+  }
+
+  if (pathname === '/cancel') {
+    return (
+        <Container maxWidth="sm" sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="h5" color="error" gutterBottom>
+            ❌ Оплата отменена.
+          </Typography>
+          <Typography variant="body1">
+            Ваша платежная сессия была отменена. Вы всегда можете попробовать снова.
+          </Typography>
+          <Button variant="contained" sx={{ mt: 3 }} onClick={() => window.location.href = '/'}>
+            Вернуться к задачам
+          </Button>
+        </Container>
+    );
+  }
+
   return (
       // Оборачиваем все приложение в ThemeProvider
       <ThemeProvider theme={ theme }>
@@ -146,12 +203,30 @@ const App = () => {
         <CssBaseline/>
 
         <Container maxWidth={ 'sm' } sx={ { mt: 4 } }>
-          <Box sx={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 } }>
+          <Box sx={ {
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' }, // На маленьких экранах - колонка
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+            gap: { xs: 1, sm: 2 } // Отступ между элементами
+          } }>
+            {/* Кнопка Premium */}
+            <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<DiamondIcon />}
+                onClick={handlePremiumClick}
+                sx={{ flexShrink: 0, width: { xs: '100%', sm: 'auto' } }} // На моб. - полная ширина
+            >
+              Premium
+            </Button>
             <Typography
                 variant="h4" // Заголовок приложения
                 component="h1" // Используем h1 для SEO
                 gutterBottom // Отступ снизу
                 align="center"
+                sx={{ flexGrow: 1, mr: { xs: 0, sm: 2 } }} // Убираем mr на xs, оставляем на sm
             >
               My To-Do List
             </Typography>
