@@ -8,7 +8,7 @@
 
 ## 🚀 Демо и Репозитории
 
-* **Рабочее демо (Фронтенд):** [https://my-todo-list-steel.vercel.app](https://my-todo-list-steel.vercel.app/)
+* **Рабочее демо (Фронтенд):** [https://my-todo-list-i15p.vercel.app/](https://my-todo-list-steel.vercel.app/)
 * **Репозиторий на GitHub (Фронтенд):** [https://github.com/svladimir1010/my-todo-list](https://github.com/svladimir1010/my-todo-list)
 * **Репозиторий Бэкенда (FastAPI):** [https://github.com/svladimir1010/todo-backend.git](https://github.com/svladimir1010/todo-backend.git)
 * **Репозиторий Смарт-контракта (Hardhat/Solidity):** [https://github.com/svladimir1010/blockchain-service](https://github.com/svladimir1010/blockchain-service)
