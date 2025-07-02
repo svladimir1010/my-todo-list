@@ -15,6 +15,7 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 test.jsx
+test.py
 .env
 !.vscode/extensions.json
 .idea

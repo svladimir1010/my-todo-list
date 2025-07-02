@@ -1,7 +1,8 @@
 // src/constants/contractConfig.js
 
 // Адрес развернутого NFT смарт-контракта в тестовой сети Sepolia
-export const CONTRACT_ADDRESS = "0x3f5Eb2aC952EE8837De8eCf6F9676fb5586B34cE"
+export const CONTRACT_ADDRESS = "0x6F875c114498B0FfC6ADe19255891bdF8aFd5612"
+
 
 // ABI (Application Binary Interface) вашего смарт-контракта TodoAchievementNFT
 export const CONTRACT_ABI = [
@@ -287,6 +288,19 @@ export const CONTRACT_ABI = [
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "TASKS_PER_NFT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -313,6 +327,57 @@ export const CONTRACT_ABI = [
       }
     ],
     "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      }
+    ],
+    "name": "claimAchievementNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "claimedTasksMilestone",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "completedTasks",
     "outputs": [
       {
         "internalType": "uint256",
@@ -377,6 +442,19 @@ export const CONTRACT_ABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "markTaskCompleted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

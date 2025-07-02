@@ -31,7 +31,6 @@ const AddTodo = ({ onAddTodo, todos }) => {
     setTodoText('')
   }
 
-
   return ( <Box // Контейнер для формы
       component={ 'form' }
       onSubmit={ handleSubmit } // Обработчик отправки формы
